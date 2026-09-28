@@ -1,0 +1,16 @@
+{
+  "sectionMeta": [
+    { "name": "General Intelligence and Reasoning", "total": 25 },
+    { "name": "General Awareness", "total": 25 },
+    { "name": "Quantitative Aptitude", "total": 25 },
+    { "name": "English Comprehension", "total": 25 }
+  ],
+  "optionMap": {
+    "en": ["Option A", "Option B", "Option C", "Option D"],
+    "hi": ["विकल्प ए", "विकल्प बी", "विकल्प सी", "विकल्प डी"]
+  },
+  "textMap": {
+    "en": "Question {n}: Sample question text for demonstration.",
+    "hi": "प्रश्न {n}: प्रदर्शन के लिए नमूना प्रश्न पाठ।"
+  }
+}

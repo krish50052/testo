@@ -1,4 +1,4 @@
-# SSC Selection Post Phase 14 Mock Test Interface
+# Testo - Mock Test Interface
 
 An interactive, responsive online mock examination platform replicating real test environments (Guidely/TCS iON style).
 
@@ -11,4 +11,4 @@ An interactive, responsive online mock examination platform replicating real tes
 - **Responsive Design**: Desktop and mobile layouts with full-screen support.
 
 ## Getting Started
-Open `tsati/index.html` in any modern web browser to start the mock examination.
+Open `index.html` in any modern web browser to start the mock examination.
