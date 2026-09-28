@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidely Clone - Mock Test Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- SCREEN 1: Instructions Page 1 -->
+    <div id="screen-inst1" class="screen active">
+        <div class="top-header">SSC Selection Post Phase 14 Mock Test - 1</div>
+        <div class="inst-container">
+            <h3>Instructions</h3>
+            <p>1. Total duration of examination is 60 minutes.</p>
+            <p>2. The clock will be set at the server. The countdown timer in the top right corner of screen will display the remaining time available for you to complete the examination.</p>
+            <p>3. Test contains following sections:</p>
+            
+            <table class="inst-table">
+                <thead>
+                    <tr>
+                        <th>SL No.</th>
+                        <th>Name of the Test</th>
+                        <th>No. of Question</th>
+                        <th>Marks</th>
+                        <th>Duration (Min)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>General Intelligence and Reasoning</td><td>25</td><td>50</td><td>15</td></tr>
+                    <tr><td>2</td><td>General Awareness</td><td>25</td><td>50</td><td>15</td></tr>
+                    <tr><td>3</td><td>Quantitative Aptitude</td><td>25</td><td>50</td><td>15</td></tr>
+                    <tr><td>4</td><td>English Comprehension</td><td>25</td><td>50</td><td>15</td></tr>
+                </tbody>
+            </table>
+            <p>4. Test contains Total 100 questions. Each correct answer you will be given <b>+ve marks</b> and for each wrong answer you may get <b>-ve marks</b>.</p>
+        </div>
+        <div class="inst-footer inst-footer-center">
+            <button class="btn btn-secondary" style="margin-left: auto;" onclick="goToScreen('screen-inst2')">Next ></button>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Instructions Page 2 -->
+    <div id="screen-inst2" class="screen">
+        <div class="top-header">SSC Selection Post Phase 14 Mock Test - 1</div>
+        <div class="inst-container">
+            <h3>Instructions</h3>
+            <p style="color: #d9534f; font-weight: bold; margin-bottom: 20px;">This is a Mock test. Question Paper displayed is for practice purpose only.</p>
+            
+            <div class="form-group">
+                <label>Choose your default language :</label>
+                <select id="lang-select">
+                    <option value="">-- Select --</option>
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                </select>
+            </div>
+
+            <div class="declaration-box">
+                <input type="checkbox" id="declare-chk">
+                <label for="declare-chk">I have read and understood the instructions. I declare that I am not in possession of prohibited gadgets.</label>
+            </div>
+        </div>
+        <div class="inst-footer">
+            <button class="btn btn-secondary" onclick="goToScreen('screen-inst1')">< Previous</button>
+            <button id="btn-ready" class="btn btn-primary" onclick="startExam()" disabled>I'm ready to begin ></button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: EXAM UI -->
+    <div id="screen-exam" class="screen">
+        <div class="pause-overlay" id="pause-overlay">
+            <div class="pause-box">
+                <h3>Test Paused</h3>
+                <p style="margin-bottom: 15px; color: #555; font-size: 14px;">The exam timer is paused. Click Resume to continue.</p>
+                <button class="pause-resume-btn" type="button" onclick="togglePause()">Resume Test</button>
+            </div>
+        </div>
+
+        <div class="exam-top-header">
+            <div>SSC Selection Post Phase 14 Mock Test - 1</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <div class="top-timer-badge">Time Left: <strong id="exam-timer">01 : 00 : 00</strong></div>
+                <button id="mobile-view-toggle" class="btn btn-secondary" type="button" aria-pressed="false" style="display:none;">Overview</button>
+                <button id="pause-btn" class="top-pause-btn" type="button">Pause</button>
+                <div class="top-win-controls">
+                    <button class="top-win-btn" title="Window" type="button">❐</button>
+                    <button class="top-win-btn expand-btn" title="Fullscreen" type="button" onclick="toggleFullscreen()">⤢</button>
+                    <button class="top-win-btn" title="Close" type="button" onclick="showFinalSummaryModal()">✕</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="exam-sub-header">
+            <nav class="section-tabs" id="section-tabs" aria-label="Test sections"></nav>
+            <select class="exam-language-control" id="exam-language-select">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+            </select>
+        </div>
+
+        <div class="exam-layout">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <div class="q-meta-bar">
+                    <div id="q-num-text">Q: 1 / 100</div>
+                    <div>Marks: <span style="color: var(--green-text);">+2</span> | <span style="color: var(--red-text);">-0.5</span></div>
+                </div>
+                <div class="q-content">
+                    <div id="q-text" style="font-weight: bold; margin-bottom: 20px;">Loading question...</div>
+                    <div id="q-options"></div>
+                </div>
+                <div class="q-actions-bar">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-action-sec" onclick="markNext()">Mark for review & next</button>
+                        <button class="btn-action-sec" onclick="clearResp()">Clear Response</button>
+                    </div>
+                    <div>
+                        <button class="btn-action-pri" onclick="saveNext()">Save & Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <div class="user-card">
+                    <div class="user-avatar">
+                        <!-- SVG Extracted to avatar.svg -->
+                        <img src="avatar.svg" alt="User Avatar" width="34" height="34">
+                    </div>
+                    <div class="username">KrishChoure</div>
+                </div>
+                <div class="time-panel">Time Left: <strong id="exam-timer-panel">01 : 00 : 00</strong></div>
+                
+                <div class="legend-grid">
+                    <div class="legend-item status-answered"><div class="mini-shape answered" id="leg-ans">0</div> <span>Answered</span></div>
+                    <div class="legend-item status-not-answered"><div class="mini-shape not-answered" id="leg-not-ans">0</div> <span>Not Answered</span></div>
+                    <div class="legend-item status-not-visited"><div class="mini-shape not-visited" id="leg-not-vis">25</div> <span>Not Visited</span></div>
+                    <div class="legend-item status-marked"><div class="mini-shape marked" id="leg-mark">0</div> <span>Marked for Review</span></div>
+                    <div class="legend-item full status-answered-marked"><div class="mini-shape ans-marked" id="leg-ans-mark">0</div> <span>Answered &amp; Marked for Review</span></div>
+                </div>
+                
+                <div class="palette-section-title">General Intelligence and Reasoning</div>
+                
+                <div class="palette-grid" id="palette-grid">
+                    <!-- Grid Buttons Generated by JS -->
+                </div>
+
+                <div class="palette-footer">
+                    <button class="btn-submit-section" id="submit-section-btn" onclick="showModal()">Submit section</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Section Summary -->
+    <div id="modal-summary" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modal-title">Section Summary</span>
+                <span class="close-btn" onclick="closeModal('modal-summary')">✖</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-confirm-text">Do you want to submit this section?</p>
+                <table class="summary-table-modal">
+                    <thead>
+                        <tr>
+                            <th>Name of the Section</th>
+                            <th>Total Questions</th>
+                            <th>Answered<br>(Only Answered)</th>
+                            <th>Answered & Marked</th>
+                            <th>Not Answered</th>
+                            <th>Marked for Review<br>(Only Marked)</th>
+                            <th>Not Visited</th>
+                            <th>Effective Attempts<br>(Answered + review)</th>
+                            <th>Time Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="mod-section-name">General Intelligence and Reasoning</td>
+                            <td id="mod-total">25</td>
+                            <td id="mod-ans">0</td>
+                            <td id="mod-ans-mark">0</td>
+                            <td id="mod-not-ans">0</td>
+                            <td id="mod-mark">0</td>
+                            <td id="mod-not-vis">25</td>
+                            <td id="mod-effective">0</td>
+                            <td id="mod-time">00 : 00 : 00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="submitCurrentSection()">Submit section</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Final Test Summary (All Sections) -->
+    <div id="modal-final-summary" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Test Summary</span>
+                <span class="close-btn" onclick="closeModal('modal-final-summary')">✖</span>
+            </div>
+            <div class="modal-body">
+                <div class="final-summary-stats">
+                    <div class="final-summary-stat"><strong id="final-answered">0</strong><span>Answered</span></div>
+                    <div class="final-summary-stat ans-marked"><strong id="final-ans-marked">0</strong><span>Answered &amp; Marked For Review</span></div>
+                    <div class="final-summary-stat not-answered"><strong id="final-not-answered">0</strong><span>Not Answered</span></div>
+                    <div class="final-summary-stat marked"><strong id="final-marked">0</strong><span>Marked for Review (Only Marked)</span></div>
+                    <div class="final-summary-stat not-visited"><strong id="final-not-visited">100</strong><span>Not Visited</span></div>
+                    <div class="final-summary-stat time"><strong>◷</strong><span id="final-time">00 : 00 : 00</span></div>
+                </div>
+                <table class="summary-table-modal final-summary-table">
+                    <caption>Test Summary</caption>
+                    <thead>
+                        <tr>
+                            <th>SL.No</th>
+                            <th>Section Name</th>
+                            <th>Total Questions</th>
+                            <th>Answered</th>
+                            <th>Answered & Marked</th>
+                            <th>Not Answered</th>
+                            <th>Marked</th>
+                            <th>Not Visited</th>
+                            <th>Effective Attempts</th>
+                            <th>Time Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody id="final-summary-rows">
+                        <!-- Populated by JS -->
+                    </tbody>
+                    <tfoot id="final-summary-total"></tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <p id="final-submit-message">Do you want to submit?</p>
+                <button class="btn btn-primary" onclick="submitExam()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
