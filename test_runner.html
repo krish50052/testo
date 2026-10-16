@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testo Mock UI - Automated Test Suite</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Test Runner Dashboard Styles */
+        #test-runner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            color: #f8fafc;
+            z-index: 99999;
+            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        .test-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .test-stat-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .test-stat-num {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .test-stat-lbl {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .stat-passed { color: #10b981; }
+        .stat-failed { color: #ef4444; }
+        .stat-total { color: #38bdf8; }
+        .stat-rate { color: #a855f7; }
+
+        .test-suite-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .suite-title {
+            background: #0f2442;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #e2e8f0;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-cases-list {
+            padding: 10px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tc-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: #182234;
+            font-size: 13px;
+        }
+        .tc-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+        }
+        .tc-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .tc-pass { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+        .tc-fail { background: #7f1d1d; color: #fca5a5; border: 1px solid #dc2626; }
+        .test-runner-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .btn-test-action {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-test-action:hover { background: #1d4ed8; }
+        .btn-close-overlay {
+            background: #334155;
+        }
+        .btn-close-overlay:hover { background: #475569; }
+    </style>
+</head>
+<body>
+    <!-- Live Test Runner Dashboard -->
+    <div id="test-runner-overlay">
+        <div class="test-header">
+            <div class="test-title">
+                <span>🧪 TESTO MOCK UI - COMPREHENSIVE TEST SUITE</span>
+            </div>
+            <div class="test-runner-actions" style="margin-top: 0;">
+                <button class="btn-test-action" onclick="runAllTests()">🔄 Re-run All Tests</button>
+                <button class="btn-test-action btn-close-overlay" onclick="toggleTestView()">👁️ Inspect Mock UI</button>
+            </div>
+        </div>
+
+        <div class="test-summary-cards">
+            <div class="test-stat-card">
+                <div class="test-stat-num stat-total" id="stat-total">0</div>
+                <div class="test-stat-lbl">Total Tests</div>
+            </div>
+            <div class="test-stat-card">
+                <div class="test-stat-num stat-passed" id="stat-passed">0</div>
+                <div class="test-stat-lbl">Passed</div>
+            </div>
+            <div class="test-stat-card">
+                <div class="test-stat-num stat-failed" id="stat-failed">0</div>
+                <div class="test-stat-lbl">Failed</div>
+            </div>
+            <div class="test-stat-card">
+                <div class="test-stat-num stat-rate" id="stat-rate">0%</div>
+                <div class="test-stat-lbl">Pass Rate</div>
+            </div>
+        </div>
+
+        <div id="test-suites-container">
+            <!-- Suites populated dynamically -->
+        </div>
+
+        <div id="raw-test-json" style="display: none;"></div>
+    </div>
+
+    <!-- Main Mock UI Container (Included for Full End-to-End Testing) -->
+    <div id="test-sandbox">
+        <!-- SCREEN 1 -->
+        <div id="screen-inst1" class="screen active">
+            <div class="top-header">SSC Selection Post Phase 14 Mock Test - 1</div>
+            <div class="inst-container">
+                <h3>Instructions</h3>
+                <p>Test contains 100 questions. Correct: +2 marks, Wrong: -0.5 marks.</p>
+            </div>
+            <div class="inst-footer">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-inst2')">Next ></button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2 -->
+        <div id="screen-inst2" class="screen">
+            <div class="top-header">SSC Selection Post Phase 14 Mock Test - 1</div>
+            <div class="inst-container">
+                <div class="form-group">
+                    <select id="lang-select">
+                        <option value="">-- Select --</option>
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                    </select>
+                </div>
+                <div class="declaration-box">
+                    <input type="checkbox" id="declare-chk">
+                    <label for="declare-chk">I agree</label>
+                </div>
+            </div>
+            <div class="inst-footer">
+                <button id="btn-ready" class="btn btn-primary" onclick="startExam()" disabled>I'm ready to begin ></button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: EXAM UI -->
+        <div id="screen-exam" class="screen">
+            <div class="pause-overlay" id="pause-overlay">
+                <div class="pause-box">
+                    <h3>Test Paused</h3>
+                    <button class="pause-resume-btn" onclick="togglePause()">Resume Test</button>
+                </div>
+            </div>
+            <div class="exam-top-header">
+                <div>SSC Selection Post Phase 14 Mock Test - 1</div>
+                <div class="top-timer-badge">Time Left: <strong id="exam-timer">01 : 00 : 00</strong></div>
+                <button id="pause-btn" class="top-pause-btn">Pause</button>
+                <button id="mobile-view-toggle" style="display:none;">Overview</button>
+            </div>
+            <div class="exam-sub-header">
+                <nav class="section-tabs" id="section-tabs"></nav>
+                <select class="exam-language-control" id="exam-language-select">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                </select>
+            </div>
+            <div class="exam-layout">
+                <div class="left-panel">
+                    <div class="q-meta-bar">
+                        <div id="q-num-text">Q: 1 / 100</div>
+                        <div>Marks: <span style="color: var(--green-text);">+2</span> | <span style="color: var(--red-text);">-0.5</span></div>
+                    </div>
+                    <div class="q-content">
+                        <div id="q-text">Loading question...</div>
+                        <div id="q-options"></div>
+                    </div>
+                    <div class="q-actions-bar">
+                        <button class="btn-action-sec" onclick="markNext()">Mark for review & next</button>
+                        <button class="btn-action-sec" onclick="clearResp()">Clear Response</button>
+                        <button class="btn-action-pri" onclick="saveNext()">Save & Next</button>
+                    </div>
+                </div>
+                <div class="right-panel">
+                    <div class="user-card">
+                        <div class="username">KrishChoure</div>
+                    </div>
+                    <div class="time-panel">Time Left: <strong id="exam-timer-panel">01 : 00 : 00</strong></div>
+                    <div class="legend-grid">
+                        <div class="legend-item"><div class="mini-shape answered" id="leg-ans">0</div> <span>Answered</span></div>
+                        <div class="legend-item"><div class="mini-shape not-answered" id="leg-not-ans">0</div> <span>Not Answered</span></div>
+                        <div class="legend-item"><div class="mini-shape not-visited" id="leg-not-vis">25</div> <span>Not Visited</span></div>
+                        <div class="legend-item"><div class="mini-shape marked" id="leg-mark">0</div> <span>Marked for Review</span></div>
+                        <div class="legend-item full"><div class="mini-shape ans-marked" id="leg-ans-mark">0</div> <span>Answered & Marked</span></div>
+                    </div>
+                    <div class="palette-section-title">General Intelligence and Reasoning</div>
+                    <div class="palette-grid" id="palette-grid"></div>
+                    <div class="palette-footer">
+                        <button class="btn-submit-section" id="submit-section-btn" onclick="showModal()">Submit section</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: SCORECARD & PERFORMANCE ANALYSIS -->
+        <div id="screen-scorecard" class="screen">
+            <header class="scorecard-top-header">
+                <div class="scorecard-header-left">
+                    <span class="scorecard-header-badge">EVALUATED RESULT</span>
+                    <span class="scorecard-header-title">SSC Selection Post Phase 14 Mock Test - 1 — Final Score Card</span>
+                </div>
+                <div class="scorecard-header-actions">
+                    <button class="btn btn-secondary sc-header-btn" onclick="printScorecard()">🖨️ Print Scorecard</button>
+                    <button class="btn btn-primary sc-header-btn" onclick="restartExam()">🔄 Re-take Test</button>
+                </div>
+            </header>
+
+            <div class="scorecard-content-scroll">
+                <div class="scorecard-container">
+                    <div class="candidate-bar">
+                        <div class="candidate-info">
+                            <div class="candidate-avatar">
+                                <img src="avatar.svg" alt="User Avatar" width="46" height="46">
+                            </div>
+                            <div class="candidate-details">
+                                <div class="candidate-name-row">
+                                    <h2 class="candidate-name" id="sc-user-name">KrishChoure</h2>
+                                    <span class="candidate-tag">Candidate</span>
+                                </div>
+                                <p class="candidate-sub">SSC Selection Post Phase 14 • Tier-1 Mock Exam 01 • Reg ID: SSC-2026-98124</p>
+                            </div>
+                        </div>
+                        <div class="candidate-meta-badges">
+                            <div class="meta-pill"><span class="meta-label">Exam Date</span><strong class="meta-value" id="sc-date-text">Oct 16, 2026</strong></div>
+                            <div class="meta-pill"><span class="meta-label">Time Taken</span><strong class="meta-value" id="sc-time-spent">00 : 00 : 00</strong></div>
+                            <div class="meta-pill"><span class="meta-label">Evaluation</span><strong class="meta-value status-badge-eval" id="sc-eval-badge">Completed</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="sc-metrics-grid">
+                        <div class="sc-metric-card score-card-primary">
+                            <div class="sc-card-top"><span class="sc-metric-label">FINAL NET SCORE</span><span class="sc-metric-chip chip-primary">Evaluated</span></div>
+                            <div class="sc-metric-val"><span id="sc-net-score">0.00</span><span class="sc-metric-max">/ 200</span></div>
+                            <div class="sc-metric-foot" id="sc-score-percent">0.0% of maximum marks</div>
+                        </div>
+
+                        <div class="sc-metric-card score-card-positive">
+                            <div class="sc-card-top"><span class="sc-metric-label">POSITIVE MARKS EARNED</span><span class="sc-metric-chip chip-green">+2.00 / Q</span></div>
+                            <div class="sc-metric-val text-green">+<span id="sc-positive-marks">0.00</span></div>
+                            <div class="sc-metric-foot">From <strong id="sc-correct-count">0</strong> correct answers</div>
+                        </div>
+
+                        <div class="sc-metric-card score-card-negative">
+                            <div class="sc-card-top"><span class="sc-metric-label">NEGATIVE MARKS DEDUCTED</span><span class="sc-metric-chip chip-red">-0.50 / wrong</span></div>
+                            <div class="sc-metric-val text-red">-<span id="sc-negative-marks">0.00</span></div>
+                            <div class="sc-metric-foot">Penalty from <strong id="sc-incorrect-count">0</strong> incorrect answers</div>
+                        </div>
+
+                        <div class="sc-metric-card score-card-accuracy">
+                            <div class="sc-card-top"><span class="sc-metric-label">ACCURACY RATE</span><span class="sc-metric-chip chip-purple">Performance</span></div>
+                            <div class="sc-metric-val text-purple" id="sc-accuracy">0.0%</div>
+                            <div class="sc-metric-foot"><strong id="sc-attempted-count">0</strong> attempted of 100 Qs</div>
+                        </div>
+
+                        <div class="sc-metric-card score-card-rank">
+                            <div class="sc-card-top"><span class="sc-metric-label">ESTIMATED PERCENTILE</span><span class="sc-metric-chip chip-amber">All-India</span></div>
+                            <div class="sc-metric-val text-amber" id="sc-percentile">0.0%</div>
+                            <div class="sc-metric-foot">Est. Rank: <strong id="sc-rank">--</strong> / 2,500</div>
+                        </div>
+                    </div>
+
+                    <div class="negative-marking-banner">
+                        <div class="neg-banner-header">
+                            <div class="neg-banner-icon">⚠️</div>
+                            <div class="neg-banner-titles">
+                                <h3>Negative Marking Impact Analysis</h3>
+                                <p id="neg-banner-explanation"></p>
+                            </div>
+                        </div>
+                        <div class="neg-stats-grid">
+                            <div class="neg-stat-card"><span class="neg-stat-lbl">Gross Score</span><strong class="neg-stat-num text-green" id="chip-gross-score">+0.00</strong></div>
+                            <div class="neg-stat-card card-penalty"><span class="neg-stat-lbl">Negative Marks Deducted</span><strong class="neg-stat-num text-red" id="chip-penalty">-0.00</strong></div>
+                            <div class="neg-stat-card card-net"><span class="neg-stat-lbl">Net Final Awarded Score</span><strong class="neg-stat-num text-primary" id="chip-net-score">0.00</strong></div>
+                            <div class="neg-stat-card"><span class="neg-stat-lbl">Score Deduction Ratio</span><strong class="neg-stat-num text-purple" id="chip-loss-ratio">0.0%</strong></div>
+                        </div>
+                        <div class="neg-banner-actions">
+                            <button class="btn-neg-view-all" onclick="filterReviewQuestions('negative')">🔍 View All Negative Marked Questions (<span id="btn-neg-count">0</span> Questions)</button>
+                        </div>
+                    </div>
+
+                    <div class="sc-section-box">
+                        <div class="sc-section-header">
+                            <div>
+                                <h3 class="sc-box-title">Section-wise Marks & Negative Deduction Breakdown</h3>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="sc-table">
+                                <thead>
+                                    <tr>
+                                        <th>Section Name</th>
+                                        <th>Total Qs</th>
+                                        <th>Attempted</th>
+                                        <th>Correct (+2)</th>
+                                        <th>Incorrect (-0.5)</th>
+                                        <th>Skipped</th>
+                                        <th>Positive Marks</th>
+                                        <th class="th-negative">Negative Deducted</th>
+                                        <th>Net Score</th>
+                                        <th>Accuracy</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sc-section-rows"></tbody>
+                                <tfoot id="sc-section-totals"></tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="sc-section-box review-box" id="test-review-section">
+                        <div class="sc-section-header review-header">
+                            <div>
+                                <h3 class="sc-box-title">Test Question Paper & Answer Key Review</h3>
+                            </div>
+                            <div class="review-lang-toggle">
+                                <label for="review-language-select">Display Language:</label>
+                                <select id="review-language-select" onchange="changeReviewLanguage(this.value)">
+                                    <option value="en">English</option>
+                                    <option value="hi">हिंदी</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="review-filters-bar">
+                            <div class="filter-group">
+                                <span class="filter-label">Filter Questions:</span>
+                                <button class="filter-tab active" data-filter="all" onclick="setReviewFilter('all')">All Questions (<span id="count-filter-all">100</span>)</button>
+                                <button class="filter-tab tab-negative" data-filter="negative" onclick="setReviewFilter('negative')">❌ Negative Marked (<span id="count-filter-negative">0</span>)</button>
+                                <button class="filter-tab tab-correct" data-filter="correct" onclick="setReviewFilter('correct')">✅ Correct Answers (<span id="count-filter-correct">0</span>)</button>
+                                <button class="filter-tab tab-skipped" data-filter="skipped" onclick="setReviewFilter('skipped')">⚪ Unattempted (<span id="count-filter-skipped">0</span>)</button>
+                            </div>
+                            <div class="filter-group section-select-group">
+                                <span class="filter-label">Section:</span>
+                                <select id="review-section-filter" onchange="setSectionFilter(this.value)">
+                                    <option value="all">All Sections (4)</option>
+                                    <option value="0">1. General Intelligence & Reasoning</option>
+                                    <option value="1">2. General Awareness</option>
+                                    <option value="2">3. Quantitative Aptitude</option>
+                                    <option value="3">4. English Comprehension</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="review-palette-wrap">
+                            <div class="review-palette-grid" id="review-palette-grid"></div>
+                        </div>
+                        <div class="review-questions-list" id="review-questions-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALS -->
+        <div id="modal-summary" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('modal-summary')">✖</span>
+                <span id="modal-title"></span>
+                <p id="modal-confirm-text"></p>
+                <div id="mod-section-name"></div>
+                <div id="mod-total"></div>
+                <div id="mod-ans"></div>
+                <div id="mod-ans-mark"></div>
+                <div id="mod-not-ans"></div>
+                <div id="mod-mark"></div>
+                <div id="mod-not-vis"></div>
+                <div id="mod-effective"></div>
+                <div id="mod-time"></div>
+                <button onclick="submitCurrentSection()">Submit</button>
+            </div>
+        </div>
+        <div id="modal-final-summary" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('modal-final-summary')">✖</span>
+                <div id="final-answered"></div>
+                <div id="final-ans-marked"></div>
+                <div id="final-not-answered"></div>
+                <div id="final-marked"></div>
+                <div id="final-not-visited"></div>
+                <div id="final-time"></div>
+                <tbody id="final-summary-rows"></tbody>
+                <tfoot id="final-summary-total"></tfoot>
+                <p id="final-submit-message"></p>
+                <button id="btn-final-submit" onclick="submitExam()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load main script -->
+    <script src="script.js"></script>
+
+    <!-- TEST SUITE IMPLEMENTATION -->
+    <script>
+        const suites = [];
+        let currentSuite = null;
+
+        function describe(name, fn) {
+            currentSuite = { name, cases: [] };
+            suites.push(currentSuite);
+            fn();
+        }
+
+        function it(name, fn) {
+            try {
+                fn();
+                currentSuite.cases.push({ name, pass: true });
+            } catch (err) {
+                currentSuite.cases.push({ name, pass: false, error: err.message });
+            }
+        }
+
+        function assert(condition, message) {
+            if (!condition) {
+                throw new Error(message || "Assertion failed");
+            }
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(`${message || "Values not equal"} (Expected: ${expected}, Got: ${actual})`);
+            }
+        }
+
+        function assertCloseTo(actual, expected, tolerance = 0.01, message) {
+            if (Math.abs(Number(actual) - Number(expected)) > tolerance) {
+                throw new Error(`${message || "Values not close"} (Expected: ${expected}, Got: ${actual})`);
+            }
+        }
+
+        function toggleTestView() {
+            const overlay = document.getElementById('test-runner-overlay');
+            overlay.style.display = overlay.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function runAllTests() {
+            suites.length = 0;
+
+            // ==========================================
+            // SUITE 1: Question Engine & Data Integrity
+            // ==========================================
+            describe("1. Question Engine & Data Integrity", () => {
+                it("1.1 Exactly 100 questions generated across the exam", () => {
+                    assertEqual(questions.length, 100, "Should generate exactly 100 questions");
+                });
+
+                it("1.2 Correct distribution of 25 questions per section (4 sections)", () => {
+                    for (let s = 0; s < 4; s++) {
+                        const count = questions.filter(q => q.sectionIndex === s).length;
+                        assertEqual(count, 25, `Section ${s} must have 25 questions`);
+                    }
+                });
+
+                it("1.3 Every question contains valid bilingual text, 4 options, correct index and explanations", () => {
+                    questions.forEach(q => {
+                        assert(q.id >= 1 && q.id <= 100, "Valid question id");
+                        assert(q.text && q.text.length > 5, "Has English text");
+                        assert(q.textHi && q.textHi.length > 5, "Has Hindi text");
+                        assertEqual(q.optionsEn.length, 4, "Must have 4 English options");
+                        assertEqual(q.optionsHi.length, 4, "Must have 4 Hindi options");
+                        assert(q.correct >= 0 && q.correct <= 3, "Correct index between 0-3");
+                        assert(q.explanationEn && q.explanationEn.length > 10, "Has English explanation");
+                        assert(q.explanationHi && q.explanationHi.length > 10, "Has Hindi explanation");
+                    });
+                });
+            });
+
+            // ==========================================
+            // SUITE 2: Negative Marking Formula & Scoring
+            // ==========================================
+            describe("2. Negative Marking & Scoring Calculations", () => {
+                it("2.1 Correct answer adds exactly +2.00 positive marks", () => {
+                    restartExam();
+                    questions[0].selected = questions[0].correct;
+                    submitExam();
+                    assertEqual(document.getElementById('sc-positive-marks').innerText, "2.00");
+                    assertEqual(document.getElementById('sc-negative-marks').innerText, "0.00");
+                    assertEqual(document.getElementById('sc-net-score').innerText, "2.00");
+                });
+
+                it("2.2 Incorrect answer incurs exactly -0.50 negative marks deduction", () => {
+                    restartExam();
+                    // Select wrong option
+                    questions[0].selected = (questions[0].correct + 1) % 4;
+                    submitExam();
+                    assertEqual(document.getElementById('sc-positive-marks').innerText, "0.00");
+                    assertEqual(document.getElementById('sc-negative-marks').innerText, "0.50");
+                    assertEqual(document.getElementById('sc-net-score').innerText, "-0.50");
+                    assertEqual(document.getElementById('sc-incorrect-count').innerText, "1");
+                });
+
+                it("2.3 Unattempted questions incur 0.00 marks (neither gain nor penalty)", () => {
+                    restartExam();
+                    // Leave all 100 unattempted
+                    submitExam();
+                    assertEqual(document.getElementById('sc-positive-marks').innerText, "0.00");
+                    assertEqual(document.getElementById('sc-negative-marks').innerText, "0.00");
+                    assertEqual(document.getElementById('sc-net-score').innerText, "0.00");
+                    assertEqual(document.getElementById('sc-attempted-count').innerText, "0");
+                    assertEqual(document.getElementById('count-filter-skipped').innerText, "100");
+                });
+
+                it("2.4 Mixed Test: 35 Correct (+70), 14 Incorrect (-7), 51 Skipped (0) => Net Score = 63.00", () => {
+                    restartExam();
+                    // 35 Correct (Q1 to Q35)
+                    for (let i = 0; i < 35; i++) {
+                        questions[i].selected = questions[i].correct;
+                    }
+                    // 14 Incorrect (Q35 to Q49)
+                    for (let i = 35; i < 49; i++) {
+                        questions[i].selected = (questions[i].correct + 1) % 4;
+                    }
+                    // Q49 to Q100 unattempted
+
+                    submitExam();
+
+                    // Expected: Positive = 70.00, Negative = 7.00, Net = 63.00
+                    assertEqual(document.getElementById('sc-positive-marks').innerText, "70.00");
+                    assertEqual(document.getElementById('sc-negative-marks').innerText, "7.00");
+                    assertEqual(document.getElementById('sc-net-score').innerText, "63.00");
+                    assertEqual(document.getElementById('sc-correct-count').innerText, "35");
+                    assertEqual(document.getElementById('sc-incorrect-count').innerText, "14");
+                    assertEqual(document.getElementById('sc-attempted-count').innerText, "49");
+
+                    // Accuracy: 35 / 49 = 71.4%
+                    assertEqual(document.getElementById('sc-accuracy').innerText, "71.4%");
+
+                    // Score Lost Ratio: 7.00 / 70.00 = 10.0%
+                    assertEqual(document.getElementById('chip-loss-ratio').innerText, "10.0%");
+                });
+            });
+
+            // ==========================================
+            // SUITE 3: Scorecard UI & Negative Marking Banner
+            // ==========================================
+            describe("3. Scorecard Display & Negative Marking Spotlight", () => {
+                it("3.1 Scorecard screen has active class after submitExam()", () => {
+                    assert(document.getElementById('screen-scorecard').classList.contains('active'), "Scorecard screen must be active");
+                });
+
+                it("3.2 Negative Marking Banner contains gross score, penalty chip, and net chip", () => {
+                    const grossChip = document.getElementById('chip-gross-score').innerText;
+                    const penChip = document.getElementById('chip-penalty').innerText;
+                    const netChip = document.getElementById('chip-net-score').innerText;
+                    assert(grossChip.startsWith('+'), "Gross score begins with +");
+                    assert(penChip.startsWith('-'), "Penalty begins with -");
+                    assertEqual(netChip, document.getElementById('sc-net-score').innerText, "Net chip matches Net score");
+                });
+
+                it("3.3 Section-wise table displays 4 section rows and accurate totals", () => {
+                    const rows = document.querySelectorAll('#sc-section-rows tr');
+                    assertEqual(rows.length, 4, "Should have 4 section rows");
+                    const tfoot = document.querySelectorAll('#sc-section-totals tr');
+                    assertEqual(tfoot.length, 1, "Should have 1 summary total row");
+
+                    // Check that the Negative Deducted column has the .td-negative class
+                    const negCells = document.querySelectorAll('#sc-section-rows .td-negative');
+                    assertEqual(negCells.length, 4, "Every section must display negative deduction cell");
+                });
+            });
+
+            // ==========================================
+            // SUITE 4: Interactive Review & Negative Filter
+            // ==========================================
+            describe("4. Question Review & Filter By Negative Marking", () => {
+                it("4.1 Default filter displays all 100 question cards in review", () => {
+                    setReviewFilter('all');
+                    const cards = document.querySelectorAll('.review-q-card');
+                    assertEqual(cards.length, 100, "All 100 cards rendered in 'all' view");
+                });
+
+                it("4.2 Negative Marking Filter displays EXACTLY the 14 incorrect questions", () => {
+                    setReviewFilter('negative');
+                    const cards = document.querySelectorAll('.review-q-card');
+                    assertEqual(cards.length, 14, "Must render exactly 14 negative marked cards");
+
+                    // Verify each negative card has correct negative indicators
+                    cards.forEach(card => {
+                        assert(card.classList.contains('status-card-incorrect'), "Card has status-card-incorrect class");
+                        assert(card.querySelector('.badge-negative-marked'), "Card has negative marked badge");
+                        assert(card.querySelector('.opt-user-wrong'), "Card highlights user's wrong choice in red");
+                        assert(card.querySelector('.opt-correct'), "Card highlights correct answer in green");
+                        assert(card.innerText.includes('-0.50'), "Card specifies -0.50 marks penalty");
+                    });
+                });
+
+                it("4.3 Correct Filter displays EXACTLY the 35 correct questions", () => {
+                    setReviewFilter('correct');
+                    const cards = document.querySelectorAll('.review-q-card');
+                    assertEqual(cards.length, 35, "Must render exactly 35 correct cards");
+                    cards.forEach(card => {
+                        assert(card.classList.contains('status-card-correct'), "Card has status-card-correct class");
+                        assert(card.querySelector('.badge-positive-earned'), "Card has positive earned badge");
+                    });
+                });
+
+                it("4.4 Skipped Filter displays EXACTLY the 51 skipped questions", () => {
+                    setReviewFilter('skipped');
+                    const cards = document.querySelectorAll('.review-q-card');
+                    assertEqual(cards.length, 51, "Must render exactly 51 skipped cards");
+                    cards.forEach(card => {
+                        assert(card.classList.contains('status-card-skipped'), "Card has status-card-skipped class");
+                    });
+                });
+
+                it("4.5 Question Palette renders 100 chips color-coded (35 green, 14 red, 51 grey)", () => {
+                    const chips = document.querySelectorAll('.r-chip');
+                    assertEqual(chips.length, 100, "Palette must have 100 chips");
+                    const correctChips = document.querySelectorAll('.r-chip.correct').length;
+                    const incorrectChips = document.querySelectorAll('.r-chip.incorrect').length;
+                    const skippedChips = document.querySelectorAll('.r-chip.skipped').length;
+                    assertEqual(correctChips, 35, "35 correct green chips");
+                    assertEqual(incorrectChips, 14, "14 negative marked red chips");
+                    assertEqual(skippedChips, 51, "51 skipped grey chips");
+                });
+
+                it("4.6 Section filter accurately scopes review to selected section", () => {
+                    setReviewFilter('all');
+                    setSectionFilter('0'); // Section 0: Reasoning
+                    const cardsSec0 = document.querySelectorAll('.review-q-card');
+                    assertEqual(cardsSec0.length, 25, "Must display 25 cards for section 0");
+                    setSectionFilter('all');
+                });
+
+                it("4.7 Language switcher toggles review questions to Hindi", () => {
+                    changeReviewLanguage('hi');
+                    const firstCard = document.querySelector('.review-q-card .review-q-text');
+                    assert(firstCard.innerText.includes('भाषा') || firstCard.innerText.includes('कूट') || firstCard.innerText.includes('?'), "Question text rendered in Hindi");
+                    changeReviewLanguage('en');
+                });
+            });
+
+            // ==========================================
+            // SUITE 5: Re-take Exam & State Reset
+            // ==========================================
+            describe("5. Exam Retake & Reset Flow", () => {
+                it("5.1 restartExam() resets all questions, timers, and returns to Screen 1", () => {
+                    restartExam();
+                    assertEqual(questions.filter(q => q.selected !== null).length, 0, "All selections cleared");
+                    assertEqual(questions.filter(q => q.status === 'not-visited').length, 100, "All questions marked not-visited");
+                    assert(document.getElementById('screen-inst1').classList.contains('active'), "Screen 1 is active");
+                    assert(!document.getElementById('screen-scorecard').classList.contains('active'), "Scorecard is closed");
+                });
+            });
+
+            // Render Dashboard UI
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            const container = document.getElementById('test-suites-container');
+            container.innerHTML = '';
+
+            suites.forEach(suite => {
+                const suiteBox = document.createElement('div');
+                suiteBox.className = 'test-suite-box';
+
+                let suitePassCount = 0;
+                let casesHtml = '';
+
+                suite.cases.forEach(c => {
+                    total++;
+                    if (c.pass) {
+                        passed++;
+                        suitePassCount++;
+                    } else {
+                        failed++;
+                    }
+
+                    casesHtml += `
+                        <div class="tc-row">
+                            <span class="tc-name">
+                                <span>${c.pass ? '✅' : '❌'}</span>
+                                <span>${c.name}</span>
+                            </span>
+                            <span class="tc-badge ${c.pass ? 'tc-pass' : 'tc-fail'}">
+                                ${c.pass ? 'PASSED' : 'FAILED: ' + c.error}
+                            </span>
+                        </div>
+                    `;
+                });
+
+                suiteBox.innerHTML = `
+                    <div class="suite-title">
+                        <span>${suite.name}</span>
+                        <span style="font-size: 13px; color: ${suitePassCount === suite.cases.length ? '#6ee7b7' : '#fca5a5'};">
+                            ${suitePassCount} / ${suite.cases.length} Passed
+                        </span>
+                    </div>
+                    <div class="test-cases-list">${casesHtml}</div>
+                `;
+
+                container.appendChild(suiteBox);
+            });
+
+            const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-passed').innerText = passed;
+            document.getElementById('stat-failed').innerText = failed;
+            document.getElementById('stat-rate').innerText = `${passRate}%`;
+
+            const summaryObj = { total, passed, failed, passRate: `${passRate}%`, suites: suites.map(s => ({ name: s.name, passed: s.cases.filter(c => c.pass).length, total: s.cases.length })) };
+            document.getElementById('raw-test-json').innerText = JSON.stringify(summaryObj);
+            window.TEST_RESULTS = summaryObj;
+        }
+
+        // Run automatically when DOM is ready
+        window.addEventListener('DOMContentLoaded', () => {
+            runAllTests();
+        });
+    </script>
+</body>
+</html>

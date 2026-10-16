@@ -153,6 +153,278 @@
         </div>
     </div>
 
+    <!-- SCREEN 4: SCORECARD & PERFORMANCE ANALYSIS -->
+    <div id="screen-scorecard" class="screen">
+        <header class="scorecard-top-header">
+            <div class="scorecard-header-left">
+                <span class="scorecard-header-badge">EVALUATED RESULT</span>
+                <span class="scorecard-header-title">SSC Selection Post Phase 14 Mock Test - 1 — Final Score Card</span>
+            </div>
+            <div class="scorecard-header-actions">
+                <button class="btn btn-secondary sc-header-btn" onclick="printScorecard()" title="Print Scorecard">🖨️ Print Scorecard</button>
+                <button class="btn btn-primary sc-header-btn" onclick="restartExam()" title="Re-take Examination">🔄 Re-take Test</button>
+            </div>
+        </header>
+
+        <div class="scorecard-content-scroll">
+            <div class="scorecard-container">
+                <!-- Candidate Info Card -->
+                <div class="candidate-bar">
+                    <div class="candidate-info">
+                        <div class="candidate-avatar">
+                            <img src="avatar.svg" alt="User Avatar" width="46" height="46">
+                        </div>
+                        <div class="candidate-details">
+                            <div class="candidate-name-row">
+                                <h2 class="candidate-name" id="sc-user-name">KrishChoure</h2>
+                                <span class="candidate-tag">Candidate</span>
+                            </div>
+                            <p class="candidate-sub">SSC Selection Post Phase 14 • Tier-1 Mock Exam 01 • Reg ID: SSC-2026-98124</p>
+                        </div>
+                    </div>
+                    <div class="candidate-meta-badges">
+                        <div class="meta-pill">
+                            <span class="meta-label">Exam Date</span>
+                            <strong class="meta-value" id="sc-date-text">Oct 16, 2026</strong>
+                        </div>
+                        <div class="meta-pill">
+                            <span class="meta-label">Time Taken</span>
+                            <strong class="meta-value" id="sc-time-spent">00 : 00 : 00</strong>
+                        </div>
+                        <div class="meta-pill">
+                            <span class="meta-label">Evaluation</span>
+                            <strong class="meta-value status-badge-eval" id="sc-eval-badge">Completed</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Executive Metric KPI Cards -->
+                <div class="sc-metrics-grid">
+                    <!-- Net Score Card -->
+                    <div class="sc-metric-card score-card-primary">
+                        <div class="sc-card-top">
+                            <span class="sc-metric-label">FINAL NET SCORE</span>
+                            <span class="sc-metric-chip chip-primary">Evaluated</span>
+                        </div>
+                        <div class="sc-metric-val">
+                            <span id="sc-net-score">0.00</span>
+                            <span class="sc-metric-max">/ 200</span>
+                        </div>
+                        <div class="sc-metric-foot" id="sc-score-percent">0.0% of maximum marks</div>
+                    </div>
+
+                    <!-- Gross Positive Marks -->
+                    <div class="sc-metric-card score-card-positive">
+                        <div class="sc-card-top">
+                            <span class="sc-metric-label">POSITIVE MARKS EARNED</span>
+                            <span class="sc-metric-chip chip-green">+2.00 / Q</span>
+                        </div>
+                        <div class="sc-metric-val text-green">
+                            +<span id="sc-positive-marks">0.00</span>
+                        </div>
+                        <div class="sc-metric-foot">
+                            From <strong id="sc-correct-count">0</strong> correct answers
+                        </div>
+                    </div>
+
+                    <!-- Negative Marks Deducted (PROMINENT HIGHLIGHT) -->
+                    <div class="sc-metric-card score-card-negative">
+                        <div class="sc-card-top">
+                            <span class="sc-metric-label">NEGATIVE MARKS DEDUCTED</span>
+                            <span class="sc-metric-chip chip-red">-0.50 / wrong</span>
+                        </div>
+                        <div class="sc-metric-val text-red">
+                            -<span id="sc-negative-marks">0.00</span>
+                        </div>
+                        <div class="sc-metric-foot">
+                            Penalty from <strong id="sc-incorrect-count">0</strong> incorrect answers
+                        </div>
+                    </div>
+
+                    <!-- Accuracy Rate -->
+                    <div class="sc-metric-card score-card-accuracy">
+                        <div class="sc-card-top">
+                            <span class="sc-metric-label">ACCURACY RATE</span>
+                            <span class="sc-metric-chip chip-purple">Performance</span>
+                        </div>
+                        <div class="sc-metric-val text-purple" id="sc-accuracy">
+                            0.0%
+                        </div>
+                        <div class="sc-metric-foot">
+                            <strong id="sc-attempted-count">0</strong> attempted of 100 Qs
+                        </div>
+                    </div>
+
+                    <!-- Percentile & Rank -->
+                    <div class="sc-metric-card score-card-rank">
+                        <div class="sc-card-top">
+                            <span class="sc-metric-label">ESTIMATED PERCENTILE</span>
+                            <span class="sc-metric-chip chip-amber">All-India</span>
+                        </div>
+                        <div class="sc-metric-val text-amber" id="sc-percentile">
+                            0.0%
+                        </div>
+                        <div class="sc-metric-foot">
+                            Est. Rank: <strong id="sc-rank">--</strong> / 2,500
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEGATIVE MARKING PENALTY ANALYSIS SPOTLIGHT BANNER -->
+                <div class="negative-marking-banner">
+                    <div class="neg-banner-header">
+                        <div class="neg-banner-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="neg-banner-titles">
+                            <h3>Negative Marking Impact Analysis</h3>
+                            <p id="neg-banner-explanation">
+                                You incurred a deduction of <strong>-0.00 marks</strong> due to incorrect answers. 
+                                Without negative penalties, your gross score would be <strong>0.00 / 200</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="neg-stats-grid">
+                        <div class="neg-stat-card">
+                            <span class="neg-stat-lbl">Gross Score (No Negative Deduction)</span>
+                            <strong class="neg-stat-num text-green" id="chip-gross-score">+0.00</strong>
+                        </div>
+                        <div class="neg-stat-card card-penalty">
+                            <span class="neg-stat-lbl">Total Negative Marks Deducted</span>
+                            <strong class="neg-stat-num text-red" id="chip-penalty">-0.00</strong>
+                        </div>
+                        <div class="neg-stat-card card-net">
+                            <span class="neg-stat-lbl">Net Final Awarded Score</span>
+                            <strong class="neg-stat-num text-primary" id="chip-net-score">0.00</strong>
+                        </div>
+                        <div class="neg-stat-card">
+                            <span class="neg-stat-lbl">Score Deduction Ratio</span>
+                            <strong class="neg-stat-num text-purple" id="chip-loss-ratio">0.0%</strong>
+                        </div>
+                    </div>
+
+                    <div class="neg-banner-actions">
+                        <button class="btn-neg-view-all" onclick="filterReviewQuestions('negative')">
+                            🔍 View All Negative Marked Questions (<span id="btn-neg-count">0</span> Questions)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section-Wise Breakdown Table -->
+                <div class="sc-section-box">
+                    <div class="sc-section-header">
+                        <div>
+                            <h3 class="sc-box-title">Section-wise Marks & Negative Deduction Breakdown</h3>
+                            <p class="sc-subtext">Detailed breakdown of positive marks (+2.00) vs negative penalty (-0.50) across each test section.</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="sc-table">
+                            <thead>
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th>Total Qs</th>
+                                    <th>Attempted</th>
+                                    <th>Correct (+2)</th>
+                                    <th>Incorrect (-0.5)</th>
+                                    <th>Skipped</th>
+                                    <th>Positive Marks</th>
+                                    <th class="th-negative">Negative Deducted</th>
+                                    <th>Net Score</th>
+                                    <th>Accuracy</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sc-section-rows">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                            <tfoot id="sc-section-totals">
+                                <!-- Populated dynamically by JS -->
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TEST & QUESTION PAPER REVIEW ("See the test where all negative marking user can see") -->
+                <div class="sc-section-box review-box" id="test-review-section">
+                    <div class="sc-section-header review-header">
+                        <div>
+                            <h3 class="sc-box-title">Test Question Paper & Answer Key Review</h3>
+                            <p class="sc-subtext">Review all questions, verify correct answers, and inspect exact negative marking penalties applied to your test.</p>
+                        </div>
+                        <div class="review-lang-toggle">
+                            <label for="review-language-select">Display Language:</label>
+                            <select id="review-language-select" onchange="changeReviewLanguage(this.value)">
+                                <option value="en">English</option>
+                                <option value="hi">हिंदी</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Filters Bar -->
+                    <div class="review-filters-bar">
+                        <div class="filter-group">
+                            <span class="filter-label">Filter Questions:</span>
+                            <button class="filter-tab active" data-filter="all" onclick="setReviewFilter('all')">
+                                All Questions (<span id="count-filter-all">100</span>)
+                            </button>
+                            <button class="filter-tab tab-negative" data-filter="negative" onclick="setReviewFilter('negative')">
+                                ❌ Negative Marked (<span id="count-filter-negative">0</span>)
+                            </button>
+                            <button class="filter-tab tab-correct" data-filter="correct" onclick="setReviewFilter('correct')">
+                                ✅ Correct Answers (<span id="count-filter-correct">0</span>)
+                            </button>
+                            <button class="filter-tab tab-skipped" data-filter="skipped" onclick="setReviewFilter('skipped')">
+                                ⚪ Unattempted (<span id="count-filter-skipped">0</span>)
+                            </button>
+                        </div>
+                        <div class="filter-group section-select-group">
+                            <span class="filter-label">Section:</span>
+                            <select id="review-section-filter" onchange="setSectionFilter(this.value)">
+                                <option value="all">All Sections (4)</option>
+                                <option value="0">1. General Intelligence & Reasoning</option>
+                                <option value="1">2. General Awareness</option>
+                                <option value="2">3. Quantitative Aptitude</option>
+                                <option value="3">4. English Comprehension</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigator Palette for Review -->
+                    <div class="review-palette-wrap">
+                        <div class="review-palette-header">
+                            <span>Question Quick Jump Palette:</span>
+                            <div class="review-palette-legend">
+                                <span class="r-leg-item"><span class="r-badge-dot correct"></span> Correct (+2.0)</span>
+                                <span class="r-leg-item"><span class="r-badge-dot incorrect"></span> Negative Marked (-0.5)</span>
+                                <span class="r-leg-item"><span class="r-badge-dot skipped"></span> Skipped / Unattempted (0)</span>
+                            </div>
+                        </div>
+                        <div class="review-palette-grid" id="review-palette-grid">
+                            <!-- Question jump buttons generated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Questions List Container -->
+                    <div class="review-questions-list" id="review-questions-list">
+                        <!-- Questions rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="scorecard-bottom-actions">
+                    <button class="btn btn-secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆ Back to Top</button>
+                    <button class="btn btn-secondary" onclick="printScorecard()">🖨️ Print Scorecard</button>
+                    <button class="btn btn-primary" onclick="restartExam()">🔄 Re-take Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: Section Summary -->
     <div id="modal-summary" class="modal-overlay">
         <div class="modal-content">
@@ -236,8 +508,11 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <p id="final-submit-message">Do you want to submit?</p>
-                <button class="btn btn-primary" onclick="submitExam()">Submit</button>
+                <p id="final-submit-message">Are you sure you want to submit your mock test and view your scorecard?</p>
+                <div style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 10px;">
+                    <button class="btn btn-secondary" onclick="closeModal('modal-final-summary')">Resume Test</button>
+                    <button class="btn btn-primary" id="btn-final-submit" onclick="submitExam()">Submit & View Scorecard</button>
+                </div>
             </div>
         </div>
     </div>
